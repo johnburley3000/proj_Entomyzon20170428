@@ -1,8 +1,10 @@
-BATCH -p serial_requeue
+#!/bin/bash
+
+#SBATCH -p serial_requeue
 #SBATCH -n 16
 #SBATCH -N 1
-#SBATCH --mem 4000
-#SBATCH -t 4:00:00
+#SBATCH --mem 15000
+#SBATCH -t 2:00:00
 #SBATCH -J trimFastq_jb
 #SBATCH -o trim_%j.out
 #SBATCH -e trim_%j.err
@@ -18,8 +20,10 @@ BATCH -p serial_requeue
 
 #TRIMPATH=~/sw/progs/Trimmomatic-0.32/trimmomatic-0.32.jar
 #TRIMPATH=/n/sw/odyssey-apps/modules-3.2.6/Modules/modulefiles/centros6/Trimmomatic-0.32:
-TRIMPATH= /n/sw/centos6/Trimmomatic-0.32/trimmomatic-0.32.jar
+TRIMPATH=/n/sw/centos6/Trimmomatic-0.32/trimmomatic-0.32.jar
 
+DATE=`date +%Y-%m-%d`
+mkdir logs/trim
 
 
 #make adapter file; assumes that all fastq files to be trimmed use the same adaptor sequence
@@ -34,8 +38,7 @@ fi
 
 #specify the name of the first pair as the first argument on the command line and the base name for the output as the second argument
 
-INFILE=$1
-OUTFILE=$2
+INSTEM=$1
 
-java -jar $TRIMPATH PE -threads 16 -basein $INFILE -baseout $OUTFILE ILLUMINACLIP:adapters.fa:2:30:10:1:true
+java -jar $TRIMPATH PE -threads 16 -trimlog logs/trim/${DATE}_${INSTEM} -basein data/untrimmed/${INSTEM}_R1_L5.fastq.gz -baseout data/trimmed/${INSTEM}_trimmed_R1_L5.fastq.gz ILLUMINACLIP:adapters.fa:2:30:10:1:true
 

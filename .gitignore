@@ -1,3 +1,7 @@
 data/
 01_trim/results
-
+*err
+*out
+01_trim/data
+01_trim/logs
+01_trim/tmp
